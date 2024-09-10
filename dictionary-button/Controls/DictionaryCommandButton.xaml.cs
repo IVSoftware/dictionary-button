@@ -6,7 +6,6 @@ public partial class DictionaryCommandButton : Button
 
 	// Bind the OnHandle command here. No need to do it in xaml.
 	public DictionaryCommandButton() => Command = new Command<string>(OnHandle);
-	public ICommand HandleCommand { get; private set;}
 	private async void OnHandle(string key)
 	{
 		if (Commands.TryGetValue(key, out ICommand? command))
