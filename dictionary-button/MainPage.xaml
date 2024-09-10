@@ -3,22 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:dictionary_button.Controls"
              x:Class="dictionary_button.MainPage">
-
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <Image
-                Source="dotnet_bot.png"
-                HeightRequest="185"
-                Aspect="AspectFit"
-                SemanticProperties.Description="dot net bot in a race car number eight" />
-
+        <VerticalStackLayout Padding="30,0" Spacing="25">
+            <Image Source="dotnet_bot.png" HeightRequest="185" Aspect="AspectFit" />
             <HorizontalStackLayout HorizontalOptions="CenterAndExpand" Spacing="10">
-                <controls:DictionaryCommandButton Text="▲" Command="{Binding HandleCommand}" CommandParameter="Main.Up"/>
-                <controls:DictionaryCommandButton Text="▼" Command="{Binding HandleCommand}" CommandParameter="Main.Down"/>
-                <controls:DictionaryCommandButton Text="►" Command="{Binding HandleCommand}" CommandParameter="Main.Right"/>
-                <controls:DictionaryCommandButton Text="◄" Command="{Binding HandleCommand}" CommandParameter="Main.Left"/>
+                <controls:DictionaryCommandButton Text="▲" CommandParameter="Main.Up"/>
+                <controls:DictionaryCommandButton Text="▼" CommandParameter="Main.Down"/>
+                <controls:DictionaryCommandButton Text="►" CommandParameter="Main.Right"/>
+                <controls:DictionaryCommandButton Text="◄" CommandParameter="Main.Left"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
