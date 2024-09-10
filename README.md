@@ -1,4 +1,4 @@
-﻿Your question is _if there is a way to write shorter syntax for converters with Generic Types._ Your code (as I understand it) depicts an effort to map buttons to commands by identifying a generic type. But the mapping could be achieved with simpler mechanism, where any given the generic type could specify the command mapping in its constructor. Here's what I mean.
+﻿Your question is _**if there is a way to write shorter syntax for converters with Generic Types.**_ Your code (as I understand it) depicts an effort to map buttons to commands by identifying a generic type. But the mapping could be achieved with simpler mechanism, where any given generic type could specify the command mapping in its constructor. Here's what I mean.
 
 Suppose you have a large number of `Button` (as shown here) or `ImageButton` or whatever. The first thing would be to make a custom version of the control and give it a static property that is a `Dictionary<string, ICommand>`. In essence, this is still a "converter" because it maps the `CommandParameter` to an `ICommand` directly.
 
@@ -6,15 +6,12 @@ Suppose you have a large number of `Button` (as shown here) or `ImageButton` or 
 ```
 using System.Windows.Input;
 namespace dictionary_button.Controls;
-
 public partial class DictionaryCommandButton : Button
 {
 	public static Dictionary<string, ICommand> Commands = new Dictionary<string, ICommand>();
-	public DictionaryCommandButton()
-	{
-		BindingContext = this;
-		HandleCommand = new Command<string>(OnHandle);
-	}
+
+	// Bind the OnHandle command here. No need to do it in xaml.
+	public DictionaryCommandButton() => Command = new Command<string>(OnHandle);
 	public ICommand HandleCommand { get; private set;}
 	private async void OnHandle(string key)
 	{
@@ -33,29 +30,21 @@ public partial class DictionaryCommandButton : Button
 }
 ```
 
-The goal here is to simplify your xaml syntax, which now looks something like this:
+The goal here is to simplify your xaml syntax, which now looks something more like this:
 
 ```
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:dictionary_button.Controls"
              x:Class="dictionary_button.MainPage">
-
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <Image
-                Source="dotnet_bot.png"
-                HeightRequest="185"
-                Aspect="AspectFit"
-                SemanticProperties.Description="dot net bot in a race car number eight" />
-
+        <VerticalStackLayout Padding="30,0" Spacing="25">
+            <Image Source="dotnet_bot.png" HeightRequest="185" Aspect="AspectFit" />
             <HorizontalStackLayout HorizontalOptions="CenterAndExpand" Spacing="10">
-                <controls:DictionaryCommandButton Text="▲" Command="{Binding HandleCommand}" CommandParameter="Main.Up"/>
-                <controls:DictionaryCommandButton Text="▼" Command="{Binding HandleCommand}" CommandParameter="Main.Down"/>
-                <controls:DictionaryCommandButton Text="►" Command="{Binding HandleCommand}" CommandParameter="Main.Right"/>
-                <controls:DictionaryCommandButton Text="◄" Command="{Binding HandleCommand}" CommandParameter="Main.Left"/>
+                <controls:DictionaryCommandButton Text="▲" CommandParameter="Main.Up"/>
+                <controls:DictionaryCommandButton Text="▼" CommandParameter="Main.Down"/>
+                <controls:DictionaryCommandButton Text="►" CommandParameter="Main.Right"/>
+                <controls:DictionaryCommandButton Text="◄" CommandParameter="Main.Left"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
@@ -73,7 +62,7 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
 
-        // ANY view can add its commands into the static dictionary.
+        // ANY view or type can preload its commands into the static dictionary.
         DictionaryCommandButton.Commands["Main.Up"] = DisplayUp;
         DictionaryCommandButton.Commands["Main.Down"] = DisplayDown;
         DictionaryCommandButton.Commands["Main.Left"] = DisplayLeft;
@@ -109,3 +98,11 @@ public partial class MainPage : ContentPage
     });
 }
 ```
+
+I hope this is helpful.
+
+
+[![screenshot][1]][1]
+
+
+  [1]: https://i.sstatic.net/AjeEoI8J.png
